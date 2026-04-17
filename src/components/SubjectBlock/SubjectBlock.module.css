@@ -11,33 +11,40 @@
   display: flex;
   flex-direction: column;
 
-  .name {
-    font-weight: 700;
-    font-size: 1.3rem;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
+}
 
-  .professor {
-    color: #514532;
-    font-weight: 500;
-    font-size: 1.1rem;
+.name {
+  font-weight: 700;
+  font-size: 1.3rem;
+  text-align: center;
+}
 
-    svg {
-      margin-right: 5px;
-    }
+.professor {
+  color: #514532;
+  font-weight: 400;
+  font-size: 1.1rem;
+
+  svg {
+    margin-right: 5px;
   }
+}
 
-  .section {
-    color: #514532;
-    font-weight: 300;
-    font-size: 1rem;
-  }
+.section {
+  color: #514532;
+  font-weight: 300;
+  font-size: 1rem;
+}
 
-  .hour {
-    font-weight: 500;
-    font-size: 1.25rem;
+.hour {
+  font-weight: 500;
+  font-size: 1.25rem;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
