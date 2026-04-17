@@ -9,8 +9,8 @@ interface Props {
 const SubjectBlock = ({ subject, style }: Props) => {
   return (
     <div className={styles.container} style={style}>
-      <span className="name">{subject["Nombre Asignatura"]}</span>
-      {/* <span className={styles.professor}>
+      <span className={styles.name}>{subject["Nombre Asignatura"]}</span>
+      <span className={styles.professor}>
         <svg
           width="8"
           height="8"
@@ -24,12 +24,12 @@ const SubjectBlock = ({ subject, style }: Props) => {
           />
         </svg>
         {subject.Docente}
-      </span> */}
-      {/* <span className={styles.section}>#{subject.Sección}</span> */}
-      {/* <div className={styles.hour}>
+      </span>
+      <span className={styles.section}>#{subject.Sección}</span>
+      <div className={styles.hour}>
         <span>{subject.Horario.start}</span> <span>-</span>{" "}
         <span>{subject.Horario.end}</span>
-      </div> */}
+      </div>
     </div>
   );
 };
