@@ -1,0 +1,43 @@
+.container {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  background-color: white;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--black);
+
+  display: flex;
+  flex-direction: column;
+
+  .name {
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+
+  .professor {
+    color: #514532;
+    font-weight: 500;
+    font-size: 1.1rem;
+
+    svg {
+      margin-right: 5px;
+    }
+  }
+
+  .section {
+    color: #514532;
+    font-weight: 300;
+    font-size: 1rem;
+  }
+
+  .hour {
+    font-weight: 500;
+    font-size: 1.25rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

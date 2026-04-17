@@ -1,0 +1,23 @@
+.container {
+  width: 100%;
+  font-weight: 600;
+  color: var(--black);
+  padding: 15px 30px;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.container input:checked {
+  background-color: blue;
+}
+
+.badge {
+  font-weight: 400;
+  margin-left: 20px;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  background-color: #d5e3ff;
+  color: #001b3c;
+}

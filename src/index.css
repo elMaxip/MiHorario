@@ -1,0 +1,26 @@
+:root {
+  --black: #222222;
+  --blue: #4b4e6d;
+  --duoc-color: #ffb800;
+  --background: #f7f9fb;
+}
+
+#root {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--background);
+  height: 100dvh;
+  width: 100dvw;
+  margin: 0;
+}
+
+main {
+  width: 100dvw;
+}

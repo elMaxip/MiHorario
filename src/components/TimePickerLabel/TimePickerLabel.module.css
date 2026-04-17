@@ -1,0 +1,61 @@
+.container {
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  width: 98dvw;
+  max-width: 800px;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.left {
+  display: flex;
+}
+
+.line {
+  margin-right: 15px;
+  height: 100%;
+  width: 5px;
+  background-color: #3a5f94;
+  border-radius: 12px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.info span {
+  display: block;
+}
+
+.day {
+  color: var(--black);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.dayText {
+  color: rgba(81, 69, 50, 0.7);
+  font-weight: 400;
+}
+
+.inputs {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+}
+
+.input span {
+  color: #837560;
+  font-weight: 600;
+}
