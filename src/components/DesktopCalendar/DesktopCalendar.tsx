@@ -44,10 +44,11 @@ const DesktopCalendar = ({ schedule }: Props) => {
             <SubjectBlock
               key={i}
               style={{
-                top: timeToSeconds(b.Horario.start) / hourPx + initSpace,
+                top:
+                  timeToSeconds(b.Horario.start as string) / hourPx + initSpace,
                 height:
-                  (timeToSeconds(b.Horario.end) -
-                    timeToSeconds(b.Horario.start)) /
+                  (timeToSeconds(b.Horario.end as string) -
+                    timeToSeconds(b.Horario.start as string)) /
                     hourPx +
                   "px",
               }}

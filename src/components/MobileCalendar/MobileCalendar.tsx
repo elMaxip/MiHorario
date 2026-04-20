@@ -4,6 +4,7 @@ import styles from "./MobileCalendar.module.css";
 import "../DesktopCalendar/DesktopCalendar.module.css";
 import SubjectBlock from "../SubjectBlock/SubjectBlock";
 import { timeToSeconds } from "../../utils/planner.utils";
+import "@/App.css";
 
 interface Props {
   schedule: Schedule;
@@ -33,15 +34,15 @@ const MobileCalendar = ({ schedule }: Props) => {
             </svg>
           </summary>
           <div className={styles.columns}>
-            <div className="hour-column">
-              <div className="column-label" style={{ height: initSpace }}>
-                <span className="hour-column-label">HORA</span>
+            <div className={styles.hourColumn}>
+              <div className={styles.columnLabel} style={{ height: initSpace }}>
+                <span className={styles.hourColumnLabel}>HORA</span>
               </div>
 
               {Array.from({ length: 24 }).map((_, i) => (
                 <div
                   key={i}
-                  className="hour-label"
+                  className={styles.hourLabel}
                   style={{
                     top: (i * 3600) / hourPx + initSpace,
                   }}
@@ -53,20 +54,22 @@ const MobileCalendar = ({ schedule }: Props) => {
 
             <div
               key={d.id}
-              className="day-column"
+              className={styles.dayColumn}
               style={{ height: (24 * 3600) / hourPx + initSpace }}
             >
-              <div className="column-label" style={{ height: initSpace }}>
+              <div className={styles.columnLabel} style={{ height: initSpace }}>
                 <span>{d.label}</span>
               </div>
               {schedule[d.id]?.map((b, i) => (
                 <SubjectBlock
                   key={i}
                   style={{
-                    top: timeToSeconds(b.Horario.start) / hourPx + initSpace,
+                    top:
+                      timeToSeconds(b.Horario.start as string) / hourPx +
+                      initSpace,
                     height:
-                      (timeToSeconds(b.Horario.end) -
-                        timeToSeconds(b.Horario.start)) /
+                      (timeToSeconds(b.Horario.end as string) -
+                        timeToSeconds(b.Horario.start as string)) /
                         hourPx +
                       "px",
                   }}

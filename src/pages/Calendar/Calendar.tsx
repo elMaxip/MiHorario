@@ -4,12 +4,16 @@ import DesktopCalendar from "../../components/DesktopCalendar/DesktopCalendar";
 import MobileCalendar from "../../components/MobileCalendar/MobileCalendar";
 import { useAtomValue } from "jotai";
 import { schedulesAtom } from "../../App";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const SchedulePage = () => {
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [count, setCount] = useState(0);
   const schedules = useAtomValue(schedulesAtom);
+
+  if (!schedules || schedules.length == 0) {
+    return <Navigate to="/" replace />;
+  }
 
   window.addEventListener("resize", () => {
     setWindowWidth(window.innerWidth);
@@ -66,8 +70,12 @@ const SchedulePage = () => {
         </div>
       </div>
 
-      {windowWidth >= 1030 && <DesktopCalendar schedule={schedules![count]} />}
-      {windowWidth < 1030 && <MobileCalendar schedule={schedules![count]} />}
+      {windowWidth >= 1030 && (
+        <DesktopCalendar schedule={schedules?.[count] || {}} />
+      )}
+      {windowWidth < 1030 && (
+        <MobileCalendar schedule={schedules?.[count] || {}} />
+      )}
     </main>
   );
 };

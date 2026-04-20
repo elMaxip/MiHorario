@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { fileAtom, schedulesAtom } from "../../App";
 import type { Day, ProcessedSubject, Subject } from "../../types/planner.types";
-import { processFileAndGenerateSchedules } from "../../utils/planner.utils";
+import {
+  getData,
+  processFileAndGenerateSchedules,
+} from "../../utils/planner.utils";
 import styles from "./Planner.module.css";
 import TimePickerLabel from "../../components/TimePickerLabel/TimePickerLabel";
 import Button from "../../components/Button/Button";
@@ -20,9 +23,11 @@ export const DAYS: { id: Day; label: string }[] = [
 
 const Planner = () => {
   const navigate = useNavigate();
-  const [file, setFile] = useAtom(fileAtom);
+  const [file, _] = useAtom(fileAtom);
   const setGeneratedSchedules = useSetAtom(schedulesAtom);
-  const [data, setData] = useState<ProcessedSubject[]>([]);
+  const [processedSubjects, setProcessedSubjects] = useState<
+    ProcessedSubject[] | null
+  >(null);
   const [chosenSubjects, setChoosenSubjects] = useState<Set<string>>(new Set());
 
   const [hours, setHours] = useState<Record<Day, [string, string]>>({
@@ -40,39 +45,20 @@ const Planner = () => {
     }));
   };
 
-  const handleFile = () => {
-    if (chosenSubjects.size == 0) return;
-
+  const processData = () => {
     const reader = new FileReader();
-    const testFile = file || new File([""], "test.xlsx");
-
+    const finalFile = file || new File([""], "testfile.xlsx");
     reader.onload = (event) => {
       if (!event.target) return;
       const result = new Uint8Array(event.target.result as ArrayBuffer);
-      const generated = processFileAndGenerateSchedules(
-        result,
-        hours,
-        chosenSubjects,
-        data,
-      );
-
-      console.log(generated);
-
-      if (generated.length > 0) {
-        setGeneratedSchedules(generated);
-        setFile(null);
-        navigate("/calendar");
-      }
+      const data = getData(result);
+      setProcessedSubjects(data);
     };
 
-    reader.readAsArrayBuffer(testFile);
+    reader.readAsArrayBuffer(finalFile);
   };
 
-  useEffect(() => {
-    readFileForDev();
-  }, []);
-
-  const readFileForDev = async () => {
+  const processDataForDev = async () => {
     try {
       const response = await fetch("/Horario-full.xlsx");
       const arrayBuffer = await response.arrayBuffer();
@@ -101,11 +87,46 @@ const Planner = () => {
         return acc;
       }, [] as ProcessedSubject[]);
 
-      setData(processedData);
+      setProcessedSubjects(processedData);
     } catch (error) {
       console.error("Error", error);
     }
   };
+
+  const createSchedules = () => {
+    if (
+      !processedSubjects ||
+      processedSubjects.length == 0 ||
+      chosenSubjects.size == 0
+    )
+      return;
+    const generated = processFileAndGenerateSchedules(
+      processedSubjects,
+      hours,
+      chosenSubjects,
+    );
+
+    if (generated.length > 0) {
+      setGeneratedSchedules(generated);
+      navigate("/calendar");
+    }
+  };
+
+  useEffect(() => {
+    if (import.meta.env.VITE_MODE === "dev") {
+      processDataForDev();
+    } else {
+      processData();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (processedSubjects && processedSubjects.length == 0) {
+      console.log(processedSubjects);
+      alert("El archivo no tiene ninguna asignatura");
+      navigate("/");
+    }
+  }, [processedSubjects]);
 
   return (
     <main className={styles.container}>
@@ -167,14 +188,14 @@ const Planner = () => {
           </summary>
 
           <SubjectChoise
-            subjects={data}
+            subjects={processedSubjects || []}
             chosenSubjects={chosenSubjects}
             setChoosenSubjects={setChoosenSubjects}
           />
         </details>
       </div>
 
-      <Button onClick={handleFile}>Crear y visualizar horarios</Button>
+      <Button onClick={createSchedules}>Crear y visualizar horarios</Button>
     </main>
   );
 };

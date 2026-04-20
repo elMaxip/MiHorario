@@ -30,6 +30,7 @@ const FileUploader = ({ handleFile }: Props) => {
         ref={fileInputRef}
         onChange={handleFileChange}
         style={{ display: "none" }}
+        accept=".xlsx"
       />
 
       <div className={styles.icon}>

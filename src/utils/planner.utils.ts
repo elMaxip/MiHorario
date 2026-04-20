@@ -125,13 +125,10 @@ export const createSchedule = (
 };
 
 export const processFileAndGenerateSchedules = (
-  fileData: Uint8Array<ArrayBuffer>,
+  processedSubjects: ProcessedSubject[],
   hours: Record<Day, [string, string]>,
   choosenSet: Set<string>,
-  data?: ProcessedSubject[],
 ): Schedule[] => {
-  const processedSubjects = data || getData(fileData);
-
   const excludedSet: Set<string> = new Set();
   const foundSet: Set<string> = new Set();
 
