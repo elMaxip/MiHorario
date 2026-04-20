@@ -39,15 +39,13 @@ const TimePicker = ({ value = "00:00:00", onChange }: Props) => {
           />
           <div
             onClick={(e) => e.stopPropagation()}
-            className={styles[`timepickerForm ${active ? "active" : ""}`]}
+            className={`${styles.timepickerForm} ${active ? styles.active : ""}`}
           >
             <div className={styles.timepickerScrollColumn}>
               {HOURS.map((h) => (
                 <div
                   key={h}
-                  className={
-                    styles[`timepickerItem ${h === hour ? "active" : ""}`]
-                  }
+                  className={`${styles.timepickerItem} ${h === hour ? styles.active : ""}`}
                   onClick={() => handleHourClick(h)}
                 >
                   {h}
@@ -58,9 +56,7 @@ const TimePicker = ({ value = "00:00:00", onChange }: Props) => {
               {MINUTES.map((m) => (
                 <div
                   key={m}
-                  className={
-                    styles[`timepickerItem ${m === minute ? "active" : ""}`]
-                  }
+                  className={`${styles.timepickerItem} ${m === minute ? styles.active : ""}`}
                   onClick={() => handleMinuteClick(m)}
                 >
                   {m}
