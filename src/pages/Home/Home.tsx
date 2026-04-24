@@ -4,6 +4,7 @@ import { fileAtom } from "../../App";
 import Hero from "../../components/Hero/Hero";
 import FileUploader from "../../components/FileUploader/FileUploader";
 import { useNavigate } from "react-router-dom";
+import styles from "./Home.module.css";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -34,15 +35,10 @@ const Home = () => {
 
   return (
     <main
-      className={`home ${isDragging ? "dragging" : ""}`}
+      className={styles.container}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
     >
       <Hero />
       <FileUploader handleFile={handleFile} />
