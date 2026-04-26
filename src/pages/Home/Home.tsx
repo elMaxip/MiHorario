@@ -8,7 +8,7 @@ import styles from "./Home.module.css";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [isDragging, setIsDragging] = useState(false);
+  const [_, setIsDragging] = useState(false);
   const setFile = useSetAtom(fileAtom);
 
   const onDragOver = (e: React.DragEvent) => {

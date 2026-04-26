@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./Calendar.module.css";
 import DesktopCalendar from "../../components/DesktopCalendar/DesktopCalendar";
 import MobileCalendar from "../../components/MobileCalendar/MobileCalendar";
 import { useAtomValue } from "jotai";
 import { schedulesAtom } from "../../App";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const SchedulePage = () => {
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);

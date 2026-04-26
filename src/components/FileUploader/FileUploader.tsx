@@ -1,7 +1,5 @@
 import { useRef } from "react";
 import styles from "./FileUploader.module.css";
-import { useSetAtom } from "jotai";
-import { fileAtom } from "../../App";
 import Button from "../Button/Button";
 
 interface Props {
@@ -10,7 +8,6 @@ interface Props {
 
 const FileUploader = ({ handleFile }: Props) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const setFile = useSetAtom(fileAtom);
 
   const openFileSelector = () => {
     if (!fileInputRef.current) return;
