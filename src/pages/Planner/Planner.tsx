@@ -19,6 +19,7 @@ export const DAYS: { id: Day; label: string }[] = [
   { id: "Mi", label: "Miércoles" },
   { id: "Ju", label: "Jueves" },
   { id: "Vi", label: "Viernes" },
+  { id: "Sa", label: "Sábado" },
 ];
 
 const Planner = () => {
@@ -36,6 +37,7 @@ const Planner = () => {
     Mi: ["08:00:00", "14:00:00"],
     Ju: ["08:00:00", "14:00:00"],
     Vi: ["08:00:00", "14:00:00"],
+    Sa: ["08:00:00", "14:00:00"],
   });
 
   const handleTimePicker = (day: Day, type: "min" | "max", value: string) => {

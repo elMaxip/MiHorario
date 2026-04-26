@@ -9,7 +9,7 @@
   border-radius: 12px;
 
   display: grid;
-  grid-template-columns: 100px repeat(5, 1fr);
+  grid-template-columns: 100px repeat(6, 1fr);
   overflow-y: scroll;
 
   &::-webkit-scrollbar {

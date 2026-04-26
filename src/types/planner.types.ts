@@ -1,4 +1,4 @@
-export type Day = "Lu" | "Ma" | "Mi" | "Ju" | "Vi";
+export type Day = "Lu" | "Ma" | "Mi" | "Ju" | "Vi" | "Sa";
 
 export interface Time {
   day: Day;
