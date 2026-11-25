@@ -1,0 +1,90 @@
+.button {
+  min-height: var(--button-height);
+  padding: 10px 22px;
+  border: var(--border-strong);
+  border-radius: var(--radius);
+  background: transparent;
+  font-weight: 700;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.button:hover {
+  background: var(--color-hover);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.primary {
+  background: var(--color-accent);
+}
+
+.primary:hover {
+  background: color-mix(in oklab, var(--amber-400), var(--amber-700) 14%);
+}
+
+.primary:active {
+  background: color-mix(in oklab, var(--amber-400), var(--amber-700) 26%);
+}
+
+.dark {
+  background: var(--color-surface-dark);
+  color: var(--color-text-inverse);
+}
+
+.dark:hover {
+  background: var(--neutral-950);
+}
+
+.small {
+  min-height: var(--control-min);
+  padding: 8px 16px;
+}
+
+.link {
+  min-height: var(--control-min);
+  padding: 0;
+  border: 0;
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: from-font;
+  font-weight: 600;
+  text-align: start;
+  color: inherit;
+}
+
+.link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.icon {
+  width: var(--button-height);
+  height: var(--button-height);
+  flex: none;
+  border: var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.icon:hover {
+  background: var(--color-accent-subtle);
+}
+
+.icon:disabled {
+  border-color: var(--color-line);
+  color: var(--neutral-500);
+  cursor: not-allowed;
+  background: var(--color-surface);
+}
