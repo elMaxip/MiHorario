@@ -1,0 +1,147 @@
+.week {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 56px repeat(6, minmax(0, 1fr));
+}
+
+.head {
+  padding: 10px 6px;
+  text-align: center;
+  font-weight: 700;
+  font-stretch: 88%;
+  border-bottom: var(--border-strong);
+}
+
+.short {
+  display: none;
+}
+
+.axis {
+  position: relative;
+}
+
+.axis > span {
+  position: absolute;
+  right: 10px;
+  font-size: var(--text-xsmall);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  line-height: 1;
+  transform: translateY(8px);
+}
+
+/* Horas no disponibles: rayado diagonal cada 8 px. */
+.col {
+  position: relative;
+  border-inline-start: 1px solid var(--color-rule-soft);
+  background: repeating-linear-gradient(-45deg, var(--neutral-150) 0 1px, var(--neutral-100) 1px 8px);
+}
+
+.ok {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+}
+
+.col hr {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--color-rule-soft);
+}
+
+.block {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius);
+  text-align: start;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-stretch: 84%;
+  line-height: 1.2;
+  transition: opacity 0.15s;
+}
+
+.block > b {
+  font-weight: 700;
+  font-size: var(--text-body);
+}
+
+.block > span {
+  font-size: var(--text-xsmall);
+  font-weight: 500;
+}
+
+.block:focus-visible {
+  outline-offset: -5px;
+  outline-color: currentColor;
+}
+
+.dim {
+  opacity: 0.28;
+}
+
+.origin {
+  font-style: italic;
+}
+
+.block > .sig {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .week {
+    grid-template-columns: 34px repeat(6, minmax(0, 1fr));
+  }
+
+  .axis > span {
+    right: 5px;
+    font-size: 0.75rem;
+  }
+
+  .head {
+    padding: 8px 0;
+  }
+
+  .long {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .short {
+    display: inline;
+  }
+
+  .block {
+    left: 2px;
+    right: 2px;
+    padding: 5px 2px;
+    align-items: center;
+    border-radius: 4px;
+  }
+
+  .block > b,
+  .block > span {
+    display: none;
+  }
+
+  .block > .sig {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    font-stretch: 75%;
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+}
