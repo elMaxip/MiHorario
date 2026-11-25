@@ -19,22 +19,20 @@ MiHorario automatiza ese trabajo:
 
 1. **Lee la planilla oficial** (`.xlsx`) directamente en el navegador.
 2. **Filtra** las secciones que caen fuera de tu disponibilidad diaria.
-3. **Genera por backtracking** todas las combinaciones (una sección por asignatura) que no se superponen.
+3. **Genera por backtracking** las combinaciones (una sección por asignatura) que no se superponen, por tandas y sin bloquear la interfaz.
 4. **Visualiza** cada horario resultante en un calendario semanal navegable.
 
 Todo se procesa del lado del cliente: el archivo nunca sale de tu equipo.
 
 ## Funcionalidades
 
-- **Carga de archivo** por arrastrar y soltar o mediante selector (solo `.xlsx`).
-- **Disponibilidad por día** (lunes a sábado): rango "Desde / Hasta" con un selector de hora propio.
-- **Selección de asignaturas** con filtros por carrera, nivel/semestre, jornada y modalidad virtual sincrónica.
-  - Solo se puede elegir una variante (nivel/jornada/modalidad) por asignatura; las demás se deshabilitan automáticamente.
-- **Generación de horarios** sin topes que respetan la disponibilidad indicada.
-- **Fusión de bloques**: clases consecutivas de la misma sección separadas por menos de 15 minutos se muestran como un único bloque.
-- **Visualizador** con navegación entre combinaciones ("Horario X de N").
-- **Diseño responsive**: vista de calendario semanal en escritorio (≥ 1030 px) y vista por día desplegable en móvil.
-- **Mensajes de ayuda** cuando el archivo no tiene asignaturas o cuando ninguna combinación es posible con las horas elegidas.
+- **Carga del archivo** arrastrándolo a cualquier parte de la página de inicio o con el botón «Seleccionar Excel» (accesible con teclado). «Probar con un archivo de ejemplo» carga `public/Horario.xlsx`. Los errores (archivo que no es `.xlsx`, columnas faltantes, sin asignaturas) se muestran en línea.
+- **Filtro por carrera** (obligatorio cuando el archivo trae varias), búsqueda sin tildes, nivel, jornada y modalidad. La casilla «Incluir secciones de otras carreras» suma las secciones con la misma sigla de otras carreras; en los horarios se indica su carrera de origen.
+- **Selección de asignaturas** con el conteo en vivo «n de N secciones caben». Solo se puede elegir una versión (jornada o modalidad) por sigla. Si una asignatura elegida no cabe, se sugiere la sección más cercana y «Ampliar horas» aplica ese rango.
+- **Disponibilidad por día** (lunes a sábado) en una grilla de 08:00 a 22:30: rangos rápidos, barras que se arrastran desde sus bordes (escritorio) y selects «Desde/Hasta» como alternativa de teclado y en móvil. Al pasar sobre una asignatura, la grilla muestra sus bloques.
+- **Generación por tandas de 100** en un Web Worker: la interfaz nunca se bloquea, el primer horario aparece en cuanto se encuentra y se piden más al llegar al final del carril, con «Generar 100 más» o con «siguiente» en el último. «Detener» conserva lo encontrado.
+- **Vista de horarios**: carril virtualizado de combinaciones con miniaturas, orden por menos ventanas, menos días o salida más temprana (sobre lo ya generado), semana con resaltado por asignatura, «Secciones para inscribir», «Copiar secciones» y «Descargar horario» (PNG de 1600 px). En móvil: carril horizontal, siglas en los bloques y agenda «Día por día».
+- **Sesión guardada** en `localStorage` (`mihorario:prefs:v1`): disponibilidad, ramos, carrera, filtros y orden. El archivo nunca se guarda: al recargar se pide subirlo de nuevo y se restauran las preferencias. «Restablecer preferencias» las borra.
 
 ## Tecnologías
 
@@ -44,8 +42,10 @@ Todo se procesa del lado del cliente: el archivo nunca sale de tu equipo.
 | Build / dev server | [Vite 7](https://vite.dev/) con `@vitejs/plugin-react-swc` |
 | Enrutamiento | [React Router 7](https://reactrouter.com/) |
 | Estado global | [Jotai](https://jotai.org/) |
-| Lectura de Excel | [SheetJS (`xlsx`)](https://sheetjs.com/) |
-| Estilos | CSS Modules |
+| Lectura de Excel | [SheetJS (`xlsx`)](https://sheetjs.com/) 0.20.3, instalado desde `cdn.sheetjs.com` (la versión de npm está desactualizada y tiene vulnerabilidades conocidas) |
+| Estilos | CSS Modules + variables de `src/styles/tokens.css` |
+| Tipografía | Archivo variable, autoalojada con `@fontsource-variable/archivo` |
+| Tests | [Vitest](https://vitest.dev/) |
 | Calidad de código | ESLint + `typescript-eslint` |
 
 ## Cómo usarlo
@@ -63,19 +63,6 @@ cd MiHorario
 npm install
 ```
 
-### Variables de entorno
-
-El archivo `.env` define el modo de carga de datos:
-
-```env
-VITE_MODE=prod
-```
-
-| Valor | Comportamiento |
-| --- | --- |
-| `prod` | Usa el archivo que sube el usuario en la página de inicio. |
-| `dev` | Ignora el archivo subido y carga `public/Horario-full.xlsx`, útil para desarrollar sin subir un archivo cada vez. |
-
 ### Scripts
 
 ```bash
@@ -83,20 +70,20 @@ npm run dev       # servidor de desarrollo
 npm run build     # chequeo de tipos + build de producción en dist/
 npm run preview   # sirve el build localmente
 npm run lint      # ESLint
+npm test          # Vitest
 ```
 
 ### Flujo de uso
 
 1. **Inicio (`/`)**: arrastra o selecciona el Excel con la oferta académica.
-2. **Planificador (`/planner`)**:
-   - En *Disponibilidad*, ajusta el rango horario de cada día (por defecto 08:00–14:00).
-   - En *Asignaturas*, filtra y marca los ramos que quieres inscribir.
-   - Presiona **Crear y visualizar horarios**.
-3. **Calendario (`/calendar`)**: recorre las combinaciones generadas con las flechas.
+2. **Planificador (`/planificador`)**: elige tu carrera, marca tus ramos y ajusta tu disponibilidad (por defecto lunes, miércoles y viernes de 08:00 a 14:00; martes y jueves de 08:00 a 17:00). Presiona **Crear horarios**.
+3. **Horarios (`/horarios`)**: recorre las combinaciones, ordénalas, copia las secciones o descarga la imagen.
+
+Las rutas antiguas `/planner` y `/calendar` redirigen a las nuevas.
 
 ### Formato del Excel
 
-Se lee la **primera hoja** del libro. Cada fila representa un bloque de clase y debe incluir estas columnas:
+Se lee la **primera hoja** del libro. Cada fila representa un bloque de clase. Estas columnas son obligatorias: `Carrera`, `Jornada`, `Sigla Asignatura`, `Nombre Asignatura`, `Nivel`, `Sección`, `Horario` y `Docente`. `ASIGNATURA VIRTUAL SINCRONICA` es opcional y marca la modalidad online; el resto se ignora.
 
 | Columna | Ejemplo |
 | --- | --- |
@@ -112,73 +99,69 @@ Se lee la **primera hoja** del libro. Cada fila representa un bloque de clase y 
 | `Docente` | `NOMBRE APELLIDO` |
 | `ASIGNATURA VIRTUAL SINCRONICA` | *(opcional)* |
 
-El campo `Horario` tiene el formato `<Día> <inicio> - <fin>`, con día en `Lu`, `Ma`, `Mi`, `Ju`, `Vi` o `Sa`. Las filas con horario `0:00:00 - 0:00:00` (sin horario asignado) se descartan. Una sección con varias clases a la semana aparece en varias filas.
+El campo `Horario` tiene el formato `<Día> <inicio> - <fin>`, con día en `Lu`, `Ma`, `Mi`, `Ju`, `Vi` o `Sa`. Las filas con horario `0:00:00 - 0:00:00` (sin horario asignado) se descartan, y una sección sin ninguna fila con horario no se ofrece. Una sección con varias clases a la semana aparece en varias filas; una sección compartida por varias carreras aparece una vez por carrera y se une en una sola.
 
-En `public/` hay dos archivos de ejemplo: `Horario.xlsx` (reducido) y `Horario-full.xlsx` (oferta completa).
+En `public/` hay dos archivos de ejemplo: `Horario.xlsx` (reducido) y `Horario-full.xlsx` (oferta completa, varias carreras).
 
 ## Estructura del proyecto
 
 ```
 src/
-├── App.tsx                 # Rutas y átomos globales (archivo y horarios generados)
 ├── main.tsx
-├── pages/
-│   ├── Home/               # Carga del archivo
-│   ├── Planner/            # Disponibilidad y selección de asignaturas
-│   └── Calendar/           # Visualizador de horarios
-├── components/
-│   ├── DesktopCalendar/    # Grilla semanal
-│   ├── MobileCalendar/     # Vista por día
-│   ├── SubjectBlock/       # Bloque de clase en el calendario
-│   ├── SubjectChoise/      # Filtros + listado de asignaturas
-│   ├── FilteredSubject/    # Checkbox de cada asignatura
-│   ├── TimePicker/         # Selector de hora/minuto
-│   ├── TimePickerLabel/    # Fila "Desde / Hasta" por día
-│   ├── FileUploader/  Hero/  Button/
-├── types/planner.types.ts  # Tipos de dominio (Subject, Schedule, Day…)
-└── utils/planner.utils.ts  # Parseo del Excel y algoritmo de generación
+├── app/App.tsx            # Rutas, barra superior y guarda «sin archivo → inicio»
+├── domain/                # TypeScript puro, sin React, con tests
+│   ├── types.ts           # Offering, Subject, Section, Block, Availability, Schedule
+│   ├── parse.ts           # ArrayBuffer → Offering, con errores tipados
+│   ├── time.ts, text.ts   # Minutos ↔ «09:31», duraciones, mayúsculas, búsqueda
+│   ├── merge.ts           # Fusión de bloques a menos de 15 min
+│   ├── fit.ts             # Qué secciones caben y alcance por carrera
+│   ├── nearest.ts         # Sección más cercana y rango a ampliar
+│   ├── generate.ts        # Backtracking con pila explícita, pausable
+│   ├── stats.ts           # Días, ventanas y hora de salida
+│   ├── availability.ts    # Disponibilidad por defecto, rangos rápidos, tramos del día
+│   └── problem.ts         # Arma el problema para el worker
+├── workers/               # Worker de generación por tandas y su protocolo
+├── state/                 # Átomos de Jotai, preferencias (localStorage) y controlador del worker
+├── features/
+│   ├── home/              # Inicio y zona de carga
+│   ├── planner/           # Asignaturas, disponibilidad y barra inferior
+│   └── schedules/         # Carril, semana, secciones, agenda y exportación PNG
+├── ui/                    # Button, Field, Progress, TopBar, Logo
+└── styles/                # tokens.css (paleta y tipografía) y global.css
 ```
 
 ## Decisiones técnicas
 
 ### Procesamiento 100 % en el cliente
-No hay backend: SheetJS lee el archivo como `ArrayBuffer` en el navegador. Esto simplifica el despliegue (cualquier hosting estático sirve), elimina costos de servidor y evita que datos de la institución o del estudiante viajen por la red.
-
-### Algoritmo de generación: backtracking con poda
-`createSchedule` recorre las asignaturas en orden y, para cada una, prueba cada sección. Antes de avanzar verifica con `checkSchedule` que ningún bloque de la sección se superponga con lo ya asignado; si hay tope, esa rama se descarta de inmediato. Así se evita generar el producto cartesiano completo de secciones.
-
-Antes del backtracking se aplica un **prefiltrado** (`processFileAndGenerateSchedules`):
-
-- Se descartan secciones con algún bloque fuera de la disponibilidad del día. Basta un bloque fuera de rango para excluir la sección entera, ya que inscribirla obliga a asistir a todas sus clases.
-- Si alguna asignatura elegida queda sin secciones válidas, se avisa al usuario antes de intentar combinar.
+No hay backend: SheetJS lee el archivo en el navegador y se descarga solo cuando hace falta (import dinámico). Ningún dato de la institución o del estudiante viaja por la red, y cualquier hosting estático sirve.
 
 ### Identidad de una asignatura
-Una misma asignatura puede ofrecerse en distintos niveles, jornadas o modalidades. Por eso se identifica con la clave compuesta `Nombre/Nivel/Jornada/Virtual`, y la interfaz impide seleccionar dos variantes de la misma asignatura.
+Una asignatura se identifica por **sigla + jornada + modalidad**. Asignaturas con el mismo nombre y distinta sigla (por ejemplo INU4100 e INU4101) nunca se mezclan. Por defecto cada asignatura usa solo las secciones de la carrera elegida; la casilla «Incluir secciones de otras carreras» suma las de la misma sigla.
 
-### Fusión de bloques contiguos
-Las planillas suelen partir una clase larga en módulos consecutivos (p. ej. `08:31–09:50` y `10:01–11:20`). `mergeBlocks` une bloques de la misma sección y día que estén a menos de 15 minutos entre sí, para que el calendario muestre una sola tarjeta y el chequeo de topes trabaje con menos elementos.
+### Generación: backtracking pausable en un Web Worker
+Antes de buscar se filtran las secciones que caben; si una asignatura queda sin secciones se devuelve ese error (con la sugerencia más cercana) en vez de buscar. Las asignaturas se ordenan de menos a más secciones válidas para podar antes, y los choques entre secciones se precalculan en una matriz (`Uint8Array`), así que comprobar un tope es O(1). El recorrido usa un arreglo de índices y una pila explícita: se puede detener en cualquier punto y reanudar exactamente donde quedó.
 
-### Horas como segundos
-Las horas se convierten a segundos desde medianoche (`timeToSeconds`) para comparar rangos con aritmética simple. El calendario usa el mismo valor para posicionar cada bloque (`top = segundos / 35 + offset`).
+El worker conserva ese estado entre mensajes (`start`, `next`, `cancel`) y responde con `progress` (cada ~50 ms, con los horarios nuevos para mostrar el primero cuanto antes), `batch` y `error`. Los horarios viajan compactos (índice de sección por asignatura, más sus estadísticas) y la interfaz reconstruye los bloques desde la oferta. El progreso es la fracción del árbol de búsqueda ya recorrida: monótona y exacta.
 
-### Estado global mínimo con Jotai
-Solo dos datos necesitan cruzar páginas: el archivo subido y los horarios generados. Jotai los guarda en dos átomos sin el boilerplate de Context o Redux. El resto del estado (filtros, disponibilidad, selección) es local a cada página.
+### Horas en minutos enteros
+Todas las horas se convierten a minutos desde medianoche una sola vez, al leer el archivo.
 
-### CSS Modules y componentes propios
-Cada componente tiene su propio `.module.css`, evitando colisiones de clases sin agregar dependencias de estilos. El selector de hora es un componente propio para mantener un aspecto consistente en escritorio y móvil.
+### Errores como datos
+El dominio devuelve `{ ok: false, reason, … }` y la interfaz decide qué mostrar. No hay `alert()`.
+
+### Estilos
+CSS Modules por componente y una sola fuente de colores, radios y tipografía en `tokens.css`. La vista móvil o de escritorio se decide con CSS (puntos de quiebre en 980, 760 y 440 px).
 
 ## Limitaciones conocidas
 
-- El número de combinaciones crece exponencialmente con la cantidad de asignaturas y secciones; con muchas asignaturas y rangos horarios amplios la generación puede tardar.
-- Los horarios generados viven solo en memoria: si se recarga la página en `/planner` o `/calendar` hay que volver a subir el archivo.
+- La memoria crece con los horarios que se piden (no hay tope total). El carril está virtualizado, pero cada horario ocupa memoria.
+- «Ordenar por» ordena solo lo ya generado. «Orden de la planilla» es el orden de generación: las asignaturas con menos secciones se deciden primero, así que no coincide exactamente con el orden de las filas del Excel.
 - El formato del Excel está acoplado a los nombres de columna indicados arriba.
+- Los nombres de asignatura se pasan a minúscula de oración; los nombres propios dentro de ellos quedan en minúscula.
 
 ## Ideas a futuro
 
-- Mover la generación a un Web Worker para no bloquear la interfaz.
-- Ordenar o puntuar horarios (menos ventanas, menos días presenciales, salir más temprano).
-- Persistir la sesión en `localStorage`.
-- Exportar un horario a imagen, PDF o calendario (`.ics`).
+- Exportar a calendario (`.ics`).
 - Bloquear secciones o docentes específicos.
 
 ## Autor

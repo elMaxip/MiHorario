@@ -57,5 +57,5 @@ export function useCreateSchedules() {
     }
   }, [availability, chosen, navigate, scope, setError, signature, upToDate]);
 
-  return { create, running: generation.running && !upToDate, generation };
+  return { create, generation };
 }
