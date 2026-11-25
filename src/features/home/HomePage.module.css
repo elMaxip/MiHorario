@@ -1,0 +1,161 @@
+/* Inicio: la página es una semana. */
+.home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+}
+
+.days {
+  display: grid;
+  grid-template-columns: 72px repeat(6, minmax(0, 1fr));
+  border-block: var(--border-strong);
+  font-weight: 700;
+  font-stretch: 88%;
+}
+
+.days > span {
+  padding: 9px 12px;
+}
+
+.days > span + span {
+  border-inline-start: 1px solid var(--color-rule);
+}
+
+.sheet {
+  flex: 1;
+  min-height: 620px;
+  display: grid;
+  grid-template-columns: 72px repeat(6, minmax(0, 1fr));
+  position: relative;
+}
+
+.hours {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative;
+}
+
+.hours > span {
+  position: absolute;
+  right: 12px;
+  font-size: var(--text-xsmall);
+  font-weight: 600;
+  line-height: 1;
+  transform: translateY(8px);
+}
+
+.rules {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  position: relative;
+  pointer-events: none;
+}
+
+.rules i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--color-rule);
+}
+
+.col {
+  grid-row: 1;
+  position: relative;
+  border-inline-start: 1px solid var(--color-rule);
+}
+
+.pitch {
+  grid-column: 2 / 5;
+  grid-row: 1;
+  position: relative;
+  z-index: 1;
+  background: var(--color-accent);
+  border-inline-start: 1px solid var(--color-rule);
+  padding: 36px 40px 40px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.pitch h1 {
+  font-size: var(--h1-home);
+}
+
+.lead {
+  margin-top: 18px;
+  max-width: 46ch;
+  font-size: 1.125rem;
+  text-wrap: pretty;
+}
+
+.block {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-stretch: 84%;
+  line-height: 1.2;
+}
+
+.block > b {
+  font-weight: 700;
+}
+
+.block > span {
+  font-size: var(--text-xsmall);
+  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .block {
+    animation: place 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+    animation-delay: var(--delay, 0s);
+  }
+}
+
+@keyframes place {
+  from {
+    transform: translateY(-28px);
+    opacity: 0;
+  }
+}
+
+/* En móvil la semana de ejemplo no aporta: el panel amarillo ocupa la pantalla. */
+@media (max-width: 760px) {
+  .days,
+  .rules,
+  .hours,
+  .col {
+    display: none;
+  }
+
+  .sheet {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .pitch {
+    flex: 1;
+    border: 0;
+    padding: 16px 16px 24px;
+    gap: 28px;
+    justify-content: space-between;
+  }
+
+  .pitch h1 {
+    font-size: 2.75rem;
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    margin-top: 12px;
+  }
+}

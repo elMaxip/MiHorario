@@ -1,0 +1,89 @@
+.drop {
+  background: var(--color-surface);
+  border: 2px dashed var(--color-text);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.over {
+  background: var(--color-surface-dark);
+  color: var(--color-text-inverse);
+  border-style: solid;
+}
+
+.over .file {
+  visibility: hidden;
+}
+
+.title {
+  text-wrap: balance;
+  font-size: 1.375rem;
+  font-weight: 700;
+  font-stretch: 92%;
+  line-height: 1.25;
+}
+
+.notice {
+  font-weight: 600;
+  padding: 8px 12px;
+  background: var(--color-accent-subtle);
+  border-radius: var(--radius);
+}
+
+.error {
+  color: var(--color-danger);
+  font-weight: 600;
+  text-wrap: pretty;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+}
+
+.file {
+  position: relative;
+  cursor: pointer;
+}
+
+.file input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.file:focus-within {
+  outline: 3px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.file[aria-disabled] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.note {
+  font-size: var(--text-small);
+  color: var(--color-text-secondary);
+}
+
+.over .note {
+  color: var(--color-text-inverse);
+}
+
+@media (max-width: 760px) {
+  .drop {
+    padding: 20px;
+  }
+
+  .file {
+    width: 100%;
+  }
+}
