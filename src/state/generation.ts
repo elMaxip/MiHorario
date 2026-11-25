@@ -158,3 +158,11 @@ export function nextBatch(): void {
 export function cancelBatch(): void {
   if (store.get(generationAtom).running) send({ type: "cancel" });
 }
+
+/** Termina el worker y olvida los resultados (por ejemplo, al cargar otro archivo). */
+export function resetGeneration(): void {
+  worker?.terminate();
+  worker = null;
+  settleFirst({ ok: false, reason: "superseded" });
+  store.set(generationAtom, initial);
+}
