@@ -1,6 +1,6 @@
 import { read, utils } from "xlsx";
 import { mergeBlocks } from "./merge";
-import { toSentenceCase } from "./text";
+import { toNameCase, toSentenceCase } from "./text";
 import { toMinutes } from "./time";
 import { type Block, type Day, type Modalidad, type Offering, type Subject } from "./types";
 
@@ -116,7 +116,7 @@ export function parseOffering(data: ArrayBuffer | Uint8Array): ParseResult {
 
     let section = subject.sections.get(code);
     if (!section) {
-      section = { code, docente: cell(row[ix.Docente]), carreras: [], blocks: [] };
+      section = { code, docente: toNameCase(cell(row[ix.Docente])), carreras: [], blocks: [] };
       subject.sections.set(code, section);
     }
     if (!section.carreras.includes(carrera)) section.carreras.push(carrera);

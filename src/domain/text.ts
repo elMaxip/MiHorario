@@ -28,3 +28,20 @@ export function joinList(items: readonly string[]): string {
   if (items.length <= 1) return items.join("");
   return `${items.slice(0, -1).join(", ")} y ${items[items.length - 1]}`;
 }
+
+const PARTICLES = new Set(["de", "del", "la", "las", "los", "y", "e", "da", "van", "von"]);
+
+/** «CARMEN GLORIA DE LA FUENTE» → «Carmen Gloria de la Fuente». */
+export function toNameCase(name: string): string {
+  return name
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLocaleLowerCase("es")
+    .split(" ")
+    .map((w, i) =>
+      i > 0 && PARTICLES.has(w)
+        ? w
+        : w.replace(/(^|[-'’])(\p{L})/gu, (_, sep: string, c: string) => sep + c.toLocaleUpperCase("es")),
+    )
+    .join(" ");
+}

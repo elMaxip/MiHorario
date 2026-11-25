@@ -9,7 +9,7 @@ import { defaultAvailability } from "./availability";
 import { computeStats } from "./stats";
 import { INFORMATICA, loadFixture, nivel3Diurno, sameEveryDay } from "./testing";
 import { formatDuration, formatHM, toMinutes } from "./time";
-import { joinList, plain, toSentenceCase } from "./text";
+import { joinList, plain, toNameCase, toSentenceCase } from "./text";
 import type { Availability, Block } from "./types";
 import { utils, write } from "xlsx";
 
@@ -35,6 +35,10 @@ describe("text", () => {
     expect(toSentenceCase("DIAGRAMACIÓN Y DISEÑO PROCESOS I (UML)")).toBe("Diagramación y diseño procesos I (UML)");
     expect(toSentenceCase("¿ES POSIBLE CREER HOY?")).toBe("¿Es posible creer hoy?");
     expect(toSentenceCase("VÍA EXPRESA")).toBe("Vía expresa");
+  });
+  it("nombres de docentes", () => {
+    expect(toNameCase("MARCO ANTONIO DE LA FUENTE PEREZ")).toBe("Marco Antonio de la Fuente Perez");
+    expect(toNameCase("  JOSÉ  MUÑOZ-ÁLVAREZ ")).toBe("José Muñoz-Álvarez");
   });
   it("busca sin tildes", () => {
     expect(plain("Inglés ELEMENTAL")).toBe("ingles elemental");
